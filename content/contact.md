@@ -1,6 +1,5 @@
 +++
 title = 'Contact'
-menu = 'main'
 +++
 
 # Contact Information

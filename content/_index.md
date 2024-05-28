@@ -2,7 +2,7 @@
 # This title is used as the og:title on Hugo's internal
 # opengraph structured data template on the home page.
 # See https://ogp.me/ and https://gohugo.io/templates/internal#open-graph.
-title = "Portfolio"
+# title = "Sanivada Sai Chaitanya 1"
 +++
 
 Hello! I'm an aspiring Data Scientist currently looking for a full-time role. I'm passionate about using my skills in Machine Learning and data to solve challenging real-world problems.
