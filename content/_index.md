@@ -13,13 +13,31 @@ You can contact me at [chaitanyasanivada@gmail.com](mailto:chaitanyasanivada@gma
 
 ### Projects
 
-[Distracted driver detection](/projects/distracted-driver): Used Convolutional Neural Networks (CNNs) to classify driver's actions using in-car images.
+**[Distracted driver detection](/projects/distracted-driver)**
 
-[Early Alzheimer’s disease prediction](/projects/early-alzheimers): Predicted the risk of Dementia and Alzheimer’s using clinical, cognitive testing, neurophychological data from Open Access Series of Imaging Studies (OASIS).
+Used Convolutional Neural Networks (CNNs) to classify driver's actions using in-car images.
 
-[Analysis of EA FIFA player data](/projects/ea-fifa): Used player attribute data from EA Sports FIFA video game to understand the relation between various parameters like age, height, Nationality, playing position and overall skill rating.
+[![](/images/distracted-woman.png)](/projects/distracted-driver)
 
-[CNNs + LSTMs to predict heat release rate during fire accidents](/projects/heat-release-rate): Trained a CNN LSTM model to predict heat release rate using video data from NIST. Model architecuture
+**[Early Alzheimer’s disease prediction](/projects/early-alzheimers)**
+
+Predicted the risk of Dementia and Alzheimer’s using clinical, cognitive testing, neurophychological data from Open Access Series of Imaging Studies (OASIS).
+
+[![](/images/oasis.png)](/projects/early-alzheimers)
+
+**[Analysis of EA FIFA player data](/projects/ea-fifa)**
+
+Used player attribute data from EA Sports FIFA video game to understand the relation between various parameters like age, height, Nationality, playing position and overall skill rating.
+
+[![](/images/fifa.png)](/projects/ea-fifa)
+
+**[CNNs + LSTMs to predict heat release rate during fire accidents](/projects/heat-release-rate)**
+
+Trained a CNN LSTM model to predict heat release rate using video data from NIST. Model architecuture
 involved using time distributed CNN layers on top of LSTM layers.
 
-[Unpaired Image-to-Image translation using Cycle-GANs](/projects/cycle-gans): Implemented the Cycle-GAN research paper and built the model architecuture, loss functions, custom training function and input data pipelines using Tensorflow, Keras.
+[![](/images/forest-fires.png)](/projects/heat-release-rate)
+
+**[Unpaired Image-to-Image translation using Cycle-GANs](/projects/cycle-gans)**
+
+Implemented the Cycle-GAN research paper and built the model architecuture, loss functions, custom training function and input data pipelines using Tensorflow, Keras.
