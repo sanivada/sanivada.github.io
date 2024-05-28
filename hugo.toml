@@ -8,11 +8,12 @@ theme = 'hugo-bearblog'
 # Basic metadata configuration for your blog.
 title = "Sanivada Sai Chaitanya"
 author = "Chaitanya Sanivada"
-copyright = "Copyright © 2020, Jane Doe."
+# copyright = "Copyright © 2024, Jane Doe."
 languageCode = "en-US"
 
 # Generate a nice robots.txt for SEO
 enableRobotsTXT = true
+
 
 # Generate "Bearblog"-like URLs !only!, see https://bearblog.dev/.
 disableKinds = ["taxonomy"]
@@ -23,17 +24,17 @@ ignoreErrors = ["error-disable-taxonomy"]
 
 [params]
   # The "description" of your website. This is used in the meta data of your generated html.
-  description = "Personal website made with Hugo"
+  description = "Chaitanya Sanivada's Portfolio"
 
   # The path to your "favicon". This should be a square (at least 32px x 32px) png-file.
   # Hint: It's good practise to also put a "favicon.ico"-file into your "static"-folder.
-  favicon = "images/favicon.png"
+  # favicon = "images/favicon.png"
 
   # These "images" are used for the structured data templates. This will show up, when
   # services like Twitter or Slack want to generate a preview of a link to your site.
-  # See https://gohugo.io/templates/internal#twitter-cards and
+  # See https://gohugo.io/templates/int ernal#twitter-cards and
   # https://gohugo.io/templates/internal#open-graph.
-  images = ["images/share.png"]
+  images = ["images/portfolio-share.png"]
 
   # Another "title" :-). This one is used as the site_name on the Hugo's internal
   # opengraph structured data template.
@@ -50,3 +51,29 @@ ignoreErrors = ["error-disable-taxonomy"]
   # for details. An example TOML config that uses [ISO
   # 8601](https://en.wikipedia.org/wiki/ISO_8601) format:
   # dateFormat = "2006-01-02"
+
+[menu]
+#[[menu.main]]
+#  name = "Home"
+#  url = "/"
+#  weight = 10
+[[menu.main]]
+  name = "Projects"
+  url = "/#projects"
+  weight = 20
+#[[menu.main]]
+#  name = "Github"
+#  url = "https://github.com/sanivada?tab=repositories"
+#  weight = 22
+[[menu.main]]
+  name = "Linkedin"
+  url = "https://www.linkedin.com/in/sanivada/"
+  weight = 25
+[[menu.main]]
+  name = "Resume"
+  url = "/resume"
+  weight = 27
+[[menu.main]]
+  name = "Contact"
+  url = "/contact"
+  weight = 30

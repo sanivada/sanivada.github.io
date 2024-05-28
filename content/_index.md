@@ -9,6 +9,7 @@ Hello! I'm an aspiring Data Scientist currently looking for a full-time role. I'
 
 You can contact me at [chaitanyasanivada@gmail.com](mailto:chaitanyasanivada@gmail.com)
 
+---
 
 ### Projects
 
