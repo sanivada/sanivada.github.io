@@ -1,0 +1,65 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  fullBleed?: boolean;
+  isHome?: boolean;
+}
+
+const {
+  title = "Chaitanya's blog",
+  description = "Personal website, writings, notes, photography gallery, and ideas.",
+  fullBleed = false,
+  isHome = false,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <!-- Prevent theme flash script -->
+    <script is:inline>
+      (function () {
+        const theme =
+          localStorage.getItem('theme') ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
+  </head>
+  <body id="top" class={isHome ? 'home-bg' : ''}>
+    <Header />
+    {fullBleed ? (
+      <div class="fullscreen-wrapper">
+        <slot />
+      </div>
+    ) : isHome ? (
+      <div class="home-wrapper">
+        <main id="indexwrapper">
+          <div class="home-content">
+            <slot />
+          </div>
+          <Footer />
+        </main>
+      </div>
+    ) : (
+      <div class="site-wrapper">
+        <main>
+          <slot />
+        </main>
+        <Footer />
+      </div>
+    )}
+  </body>
+</html>

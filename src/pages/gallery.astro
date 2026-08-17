@@ -1,0 +1,78 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const galleryDir = path.join(process.cwd(), 'public/images/gallery');
+let galleryImages: string[] = [];
+
+if (fs.existsSync(galleryDir)) {
+  const files: string[] = fs.readdirSync(galleryDir);
+  const imageExtensions = new Set(['.jpg', '.jpeg', '.png', '.webp', '.svg', '.gif', '.JPG', '.JPEG', '.PNG', '.WEBP']);
+  galleryImages = files
+    .filter((file: string) => imageExtensions.has(path.extname(file)))
+    .map((file: string) => `/images/gallery/${file}`);
+}
+---
+
+<BaseLayout title="Gallery | Chaitanya's blog" description="A collection of snapshots and photography.">
+  <div style="margin-bottom: 0.75rem;">
+    <h1>Gallery</h1>
+  </div>
+
+  {galleryImages.length > 0 ? (
+    <div class="gallery-box">
+      <div id="gallery-view" class="gallery-image-wrap" title="Click to view another photo" role="button" tabindex="0">
+        <img
+          id="gallery-img"
+          src={galleryImages[0]}
+          alt="Gallery photograph"
+          loading="eager"
+        />
+      </div>
+
+      <div class="gallery-btn-wrapper">
+        <button id="random-btn" class="btn-secondary">
+          Show Another Photo
+        </button>
+      </div>
+    </div>
+  ) : (
+    <p style="color: var(--text-dim); font-style: italic;">No photographs in the gallery yet.</p>
+  )}
+
+  <script is:inline define:vars={{ galleryImages }}>
+    (function () {
+      const photos = galleryImages;
+      if (!photos || photos.length === 0) return;
+
+      let currentIndex = 0;
+      const imgEl = document.getElementById('gallery-img');
+      const btn = document.getElementById('random-btn');
+      const view = document.getElementById('gallery-view');
+
+      function nextPhoto() {
+        if (photos.length === 1) return;
+        let nextIndex = Math.floor(Math.random() * photos.length);
+        if (nextIndex === currentIndex) {
+          nextIndex = (nextIndex + 1) % photos.length;
+        }
+        currentIndex = nextIndex;
+        if (imgEl) {
+          imgEl.src = photos[currentIndex];
+        }
+      }
+
+      if (btn) btn.addEventListener('click', nextPhoto);
+      if (view) {
+        view.addEventListener('click', nextPhoto);
+        view.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            nextPhoto();
+          }
+        });
+      }
+    })();
+  </script>
+</BaseLayout>

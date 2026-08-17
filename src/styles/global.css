@@ -1,0 +1,779 @@
+/* ==========================================================================
+   Chris Olah Exact Typography & Design System (Computer Modern / CMS)
+   ========================================================================== */
+
+/* Computer Modern Serif (CMS) Font Faces */
+@font-face {
+  font-family: 'CMS';
+  src: url('/fonts/cmunrm.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'CMS';
+  src: url('/fonts/cmunbx.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'CMS';
+  src: url('/fonts/cmunti.woff') format('woff');
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'CMS';
+  src: url('/fonts/cmunbi.woff') format('woff');
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  /* Light Theme */
+  --bg: #ffffff;
+  --bg-subtle: #f6f8fa;
+  --text: #222222;
+  --text-muted: #555555;
+  --text-dim: #777777;
+  --nav-bg: #222222;
+  --nav-border: #111111;
+  --nav-text: #999999;
+  --nav-text-hover: #ffffff;
+  --link-color: #2b6cb0;
+  --link-hover: #1a0dab;
+  --border: #e2e8f0;
+  --border-subtle: #eaecef;
+  --code-bg: #f5f5f5;
+  --quote-bg: rgb(245, 245, 245);
+  --max-width: 800px;
+
+  /* Chris Olah exact font definitions */
+  --font-cms: 'CMS', 'Droid Sans', Helvetica, Arial, sans-serif;
+  --font-heading: 'CMS', 'Droid Serif', Georgia, 'Times New Roman', Times, serif;
+  --font-mono: 'SF Mono', Menlo, Consolas, Monaco, monospace;
+}
+
+[data-theme="dark"] {
+  /* Dark Theme */
+  --bg: #1a1a1c;
+  --bg-subtle: #242428;
+  --text: #e2e8f0;
+  --text-muted: #a0aec0;
+  --text-dim: #718096;
+  --nav-bg: #121214;
+  --nav-border: #000000;
+  --nav-text: #a0aec0;
+  --nav-text-hover: #ffffff;
+  --link-color: #90cdf4;
+  --link-hover: #bee3f8;
+  --border: #333333;
+  --border-subtle: #2d3748;
+  --code-bg: #26262a;
+  --quote-bg: #26262a;
+}
+
+/* Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-cms);
+  font-size: 18px;
+  letter-spacing: -0.02rem;
+  line-height: 1.6;
+  color: var(--text);
+  background-color: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: var(--link-color);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  color: var(--link-hover);
+}
+
+/* Headings in Computer Modern Serif (CMS) */
+h1 {
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
+  line-height: 1.25;
+  font-weight: 700;
+  text-align: left;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+}
+
+h2 {
+  font-family: var(--font-heading);
+  font-size: 1.55rem;
+  font-weight: 700;
+  text-align: left;
+  margin-top: 1.75rem;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+}
+
+h3 {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-align: left;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+
+/* ==========================================================================
+   Header Navbar (Scrolls naturally with page)
+   ========================================================================== */
+
+.site-navbar {
+  width: 100%;
+  background-color: var(--nav-bg);
+  border-bottom: 1px solid var(--nav-border);
+}
+
+.navbar-container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  height: 52px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-brand {
+  font-family: var(--font-cms);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+
+.navbar-brand:hover {
+  color: #ffffff;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 1.25rem;
+}
+
+.nav-link {
+  font-family: var(--font-cms);
+  font-size: 0.95rem;
+  color: var(--nav-text);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: var(--nav-text-hover);
+}
+
+/* Theme Toggle */
+.theme-toggle-btn {
+  background: none;
+  border: none;
+  color: var(--nav-text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  transition: color 0.15s ease;
+}
+
+.theme-toggle-btn:hover {
+  color: var(--nav-text-hover);
+}
+
+.theme-toggle-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ==========================================================================
+   Centered Container with Left-Aligned Content
+   ========================================================================== */
+
+.site-wrapper {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+  padding: 2rem 0 2rem 0;
+  text-align: left;
+}
+
+/* ==========================================================================
+   Home Page Background & Index Wrapper (Chris Olah exact style)
+   ========================================================================== */
+
+body.home-bg {
+  background: url('/images/beach.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.home-wrapper {
+  width: 80vw;
+  max-width: 80vw;
+  margin: 0 auto;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 52px);
+}
+
+#indexwrapper {
+  background-color: var(--bg);
+  padding: 2rem 3.5rem 2.5rem 3.5rem;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+  flex: 1;
+  min-height: calc(100vh - 52px);
+  display: flex;
+  flex-direction: column;
+}
+
+.home-content {
+  flex: 1;
+}
+
+[data-theme="dark"] #indexwrapper {
+  background-color: var(--bg);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+}
+
+.home-wrapper .site-footer {
+  margin-top: 1.25rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0;
+  border-top: 1px solid var(--border);
+  color: var(--text-dim);
+}
+
+.home-wrapper .site-footer a {
+  color: var(--text-dim);
+}
+
+@media (max-width: 1000px) {
+  .home-wrapper {
+    width: 90vw;
+    max-width: 90vw;
+  }
+
+  #indexwrapper {
+    padding: 1.5rem 1.75rem 1.25rem 1.75rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .home-wrapper {
+    width: 100vw;
+    max-width: 100vw;
+    margin: 0;
+    padding: 0;
+  }
+
+  #indexwrapper {
+    border-radius: 0;
+    padding: 1.25rem 1rem 1rem 1rem;
+    box-shadow: none;
+  }
+}
+
+/* Fullscreen split screen wrapper for About page */
+.fullscreen-wrapper {
+  width: 100%;
+  height: calc(100vh - 52px);
+  overflow: hidden;
+  display: flex;
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+.site-footer {
+  padding: 0.85rem 0;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.site-footer a {
+  color: var(--text-dim);
+  text-decoration: none;
+}
+
+.site-footer a:hover {
+  color: var(--text);
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   Post List (Chris Olah left-aligned list)
+   ========================================================================== */
+
+.post-list {
+  list-style: none;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: left;
+}
+
+.post-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  text-align: left;
+}
+
+.post-row-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.post-row-title {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text);
+  text-decoration: underline;
+  text-align: left;
+}
+
+.post-row-title:hover {
+  color: var(--link-hover);
+}
+
+.post-row-date {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.post-row-desc {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.post-row-meta {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 0.15rem;
+}
+
+/* Tag Chips */
+.tag-chip {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background-color: var(--bg-subtle);
+  padding: 1px 7px;
+  border-radius: 3px;
+  border: 1px solid var(--border-subtle);
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+}
+
+.tag-chip:hover {
+  color: var(--text);
+  border-color: var(--border);
+  text-decoration: none;
+}
+
+.category-tag {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  font-weight: 600;
+  margin-right: 0.25rem;
+}
+
+/* ==========================================================================
+   Blog Search & Category Filters
+   ========================================================================== */
+
+.search-wrapper {
+  margin: 1.25rem 0;
+  max-width: 500px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-family: var(--font-cms);
+  font-size: 0.95rem;
+  background-color: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: var(--text);
+}
+
+.filter-bar {
+  display: flex;
+  gap: 1.25rem;
+  margin-bottom: 1.75rem;
+  font-size: 0.95rem;
+}
+
+.filter-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.95rem;
+  padding: 0;
+  font-family: var(--font-cms);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  transition: all 0.15s ease;
+}
+
+.filter-btn:hover {
+  color: var(--text);
+}
+
+.filter-btn.active {
+  color: var(--text);
+  font-weight: 700;
+  text-decoration-color: var(--text);
+}
+
+/* ==========================================================================
+   Chris Olah Exact Split-Screen About Page (100vh fit, no overflow)
+   ========================================================================== */
+
+.about-split {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.about-split-left {
+  flex: 0 0 55%;
+  width: 55%;
+  height: 100%;
+  position: relative;
+  background-color: #000000;
+  overflow: hidden;
+}
+
+.about-split-left img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.about-split-right {
+  flex: 0 0 45%;
+  width: 45%;
+  height: 100%;
+  padding: 3rem 3.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow-y: auto;
+  background-color: var(--bg);
+  text-align: left;
+}
+
+.about-split-right h1 {
+  font-size: 2.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.about-split-right .subtitle {
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  font-style: italic;
+}
+
+.about-split-right p {
+  margin-bottom: 1.15rem;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.about-split-right ul {
+  margin: 0.5rem 0 1.25rem 1.5rem;
+  line-height: 1.7;
+}
+
+/* ==========================================================================
+   Gallery Page (Christine Minimalist Photo View - Screen Fit)
+   ========================================================================== */
+
+.gallery-box {
+  max-width: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gallery-image-wrap {
+  margin: 1rem auto 0.75rem auto;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  background-color: var(--bg-subtle);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-height: min(52vh, calc(100vh - 300px));
+  max-width: 100%;
+}
+
+.gallery-image-wrap img {
+  max-height: min(52vh, calc(100vh - 300px));
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.gallery-btn-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 0.75rem;
+}
+
+.btn-secondary {
+  background-color: var(--nav-bg);
+  color: #ffffff;
+  border: none;
+  border-radius: 3px;
+  padding: 0.45rem 1.25rem;
+  font-family: var(--font-cms);
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.btn-secondary:hover {
+  opacity: 0.88;
+}
+
+/* ==========================================================================
+   Contact Page
+   ========================================================================== */
+
+.contact-table {
+  list-style: none;
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.contact-item {
+  display: flex;
+  gap: 1.5rem;
+  align-items: baseline;
+}
+
+.contact-label {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  width: 100px;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   Article Prose Typography (Chris Olah style)
+   ========================================================================== */
+
+.prose {
+  font-family: var(--font-cms);
+  font-size: 18px;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.prose p {
+  margin-bottom: 1.35rem;
+}
+
+.prose ul, .prose ol {
+  margin: 0 0 1.35rem 1.75rem;
+}
+
+.prose li {
+  margin-bottom: 0.35rem;
+}
+
+.prose blockquote {
+  background-color: var(--quote-bg);
+  border-left: 4px solid var(--border);
+  margin: 1.5rem 0;
+  padding: 10px 18px;
+  font-style: italic;
+  border-radius: 4px;
+}
+
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background-color: var(--code-bg);
+  padding: 0.15em 0.35em;
+  border-radius: 3px;
+}
+
+.prose pre {
+  background-color: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.prose pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+.prose img {
+  border-radius: 3px;
+  margin: 1.5rem 0;
+  border: 1px solid var(--border);
+}
+
+.article-info-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border-subtle);
+  text-align: left;
+}
+
+.article-date-meta {
+  color: var(--text-dim);
+  font-style: italic;
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  margin-top: 0.4rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   Mobile Responsive Rules
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .site-wrapper {
+    padding: 0 1.25rem;
+  }
+
+  main {
+    padding: 1.75rem 0 2.5rem 0;
+  }
+
+  .about-split {
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+
+  .fullscreen-wrapper {
+    height: auto;
+    overflow: visible;
+  }
+
+  .about-split-left {
+    height: 320px;
+  }
+
+  .about-split-right {
+    height: auto;
+    padding: 2rem 1.25rem;
+  }
+}

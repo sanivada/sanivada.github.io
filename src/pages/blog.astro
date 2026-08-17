@@ -1,0 +1,146 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import WritingCard from '../components/WritingCard.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft)).map(p => ({ ...p, collectionType: 'posts' as const }));
+const personal = (await getCollection('personal', ({ data }) => !data.draft)).map(p => ({ ...p, collectionType: 'personal' as const }));
+const notes = (await getCollection('notes', ({ data }) => !data.draft)).map(n => ({ ...n, collectionType: 'notes' as const }));
+
+const allWritings = [...posts, ...personal, ...notes].sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<BaseLayout title="Blog | Chaitanya's blog" description="All writings, notes, and essays.">
+  <div style="margin-bottom: 1.5rem;">
+    <h1>All Writings</h1>
+  </div>
+
+  <!-- Search Input -->
+  <div class="search-wrapper">
+    <input
+      type="search"
+      id="search-box"
+      class="search-input"
+      placeholder="Search writings by title or tag..."
+      aria-label="Search writings"
+      autocomplete="off"
+    />
+  </div>
+
+  <!-- Category Filter Links -->
+  <div class="filter-bar" role="tablist" aria-label="Category filters">
+    <button class="filter-btn active" data-tab="all">All ({allWritings.length})</button>
+    <button class="filter-btn" data-tab="posts">Posts ({posts.length})</button>
+    <button class="filter-btn" data-tab="personal">Personal ({personal.length})</button>
+    <button class="filter-btn" data-tab="notes">Notes ({notes.length})</button>
+  </div>
+
+  <!-- Post List -->
+  <ul class="post-list" id="writings-list">
+    {allWritings.map((item) => (
+      <div
+        class="writing-item-wrapper"
+        data-category={item.collectionType}
+        data-title={item.data.title.toLowerCase()}
+        data-desc={item.data.description.toLowerCase()}
+        data-tags={item.data.tags.join(' ').toLowerCase()}
+      >
+        <WritingCard
+          title={item.data.title}
+          description={item.data.description}
+          pubDate={item.data.pubDate}
+          url={`/${item.collectionType}/${item.id}`}
+          type={item.collectionType}
+          tags={item.data.tags}
+        />
+      </div>
+    ))}
+  </ul>
+
+  <!-- Empty State -->
+  <div id="empty-state" style="display: none; padding: 2rem 0; color: var(--text-dim); font-style: italic;">
+    <p>No writings match your query.</p>
+  </div>
+
+  <script is:inline>
+    (function () {
+      const searchBox = document.getElementById('search-box');
+      const tabs = document.querySelectorAll('.filter-btn');
+      const items = document.querySelectorAll('.writing-item-wrapper');
+      const emptyState = document.getElementById('empty-state');
+
+      let currentTab = 'all';
+      let searchQuery = '';
+
+      function filterItems() {
+        let visibleCount = 0;
+        const query = searchQuery.trim().toLowerCase();
+
+        items.forEach((item) => {
+          const category = item.getAttribute('data-category');
+          const title = item.getAttribute('data-title') || '';
+          const desc = item.getAttribute('data-desc') || '';
+          const tags = item.getAttribute('data-tags') || '';
+
+          const matchesCategory = currentTab === 'all' || category === currentTab;
+          const matchesSearch =
+            !query ||
+            title.includes(query) ||
+            desc.includes(query) ||
+            tags.includes(query);
+
+          if (matchesCategory && matchesSearch) {
+            item.style.display = 'block';
+            visibleCount++;
+          } else {
+            item.style.display = 'none';
+          }
+        });
+
+        if (emptyState) {
+          emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+      }
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const initialTab = urlParams.get('tab');
+      const initialQuery = urlParams.get('q');
+
+      if (initialTab && ['all', 'posts', 'personal', 'notes'].includes(initialTab)) {
+        currentTab = initialTab;
+        tabs.forEach((tab) => {
+          if (tab.getAttribute('data-tab') === currentTab) {
+            tab.classList.add('active');
+          } else {
+            tab.classList.remove('active');
+          }
+        });
+      }
+
+      if (initialQuery && searchBox) {
+        searchBox.value = initialQuery;
+        searchQuery = initialQuery;
+      }
+
+      filterItems();
+
+      if (searchBox) {
+        searchBox.addEventListener('input', (e) => {
+          searchQuery = e.target.value;
+          filterItems();
+        });
+      }
+
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+          tabs.forEach((t) => t.classList.remove('active'));
+          tab.classList.add('active');
+          currentTab = tab.getAttribute('data-tab') || 'all';
+          filterItems();
+        });
+      });
+    })();
+  </script>
+</BaseLayout>

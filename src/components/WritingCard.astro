@@ -1,0 +1,34 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  url: string;
+  type: 'posts' | 'personal' | 'notes';
+  tags?: string[];
+}
+
+const { title, description, pubDate, url, type, tags = [] } = Astro.props;
+
+const formattedDate = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+}).format(pubDate);
+
+const typeLabel = type === 'posts' ? '/posts' : type === 'personal' ? '/personal' : '/notes';
+---
+
+<li class="post-row">
+  <div class="post-row-header">
+    <a href={url} class="post-row-title">{title}</a>
+    <time class="post-row-date" datetime={pubDate.toISOString()}>{formattedDate}</time>
+  </div>
+  {description && <p class="post-row-desc">{description}</p>}
+  <div class="post-row-meta">
+    <a href={`/blog?tab=${type}`} class="category-tag">{typeLabel}</a>
+    {tags.map((tag) => (
+      <a href={`/blog?q=${encodeURIComponent(tag)}`} class="tag-chip">{tag}</a>
+    ))}
+  </div>
+</li>

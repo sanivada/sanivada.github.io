@@ -1,0 +1,46 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  updatedDate?: Date;
+  tags?: string[];
+  type: 'posts' | 'personal' | 'notes';
+}
+
+const { title, description, pubDate, tags = [], type } = Astro.props;
+
+const formattedDate = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+}).format(pubDate);
+
+const typeLabel = type === 'posts' ? '/posts' : type === 'personal' ? '/personal' : '/notes';
+---
+
+<BaseLayout title={`${title} -- Chaitanya's blog`} description={description}>
+  <article>
+    <div class="article-info-header">
+      <h1>{title}</h1>
+      <div class="article-date-meta">
+        <span>Posted on {formattedDate}</span>
+        <span>· in <a href={`/blog?tab=${type}`}>{typeLabel}</a></span>
+        {tags.length > 0 && (
+          <>
+            <span>·</span>
+            {tags.map((tag) => (
+              <a href={`/blog?q=${encodeURIComponent(tag)}`} class="tag-chip">{tag}</a>
+            ))}
+          </>
+        )}
+      </div>
+    </div>
+
+    <div class="prose">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>

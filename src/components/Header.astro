@@ -1,0 +1,35 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+
+const pathname = Astro.url.pathname;
+const isActive = (path: string) => {
+  if (path === '/' && pathname === '/') return true;
+  if (path !== '/' && pathname.startsWith(path)) return true;
+  return false;
+};
+---
+
+<header class="site-navbar">
+  <div class="navbar-container">
+    <a href="/" class="navbar-brand">Chaitanya's blog</a>
+    <div class="navbar-right">
+      <nav aria-label="Main Navigation">
+        <ul class="nav-links">
+          <li>
+            <a href="/blog" class={`nav-link ${isActive('/blog') || isActive('/posts') || isActive('/personal') || isActive('/notes') ? 'active' : ''}`}>Blog</a>
+          </li>
+          <li>
+            <a href="/about" class={`nav-link ${isActive('/about') ? 'active' : ''}`}>About</a>
+          </li>
+          <li>
+            <a href="/gallery" class={`nav-link ${isActive('/gallery') ? 'active' : ''}`}>Gallery</a>
+          </li>
+          <li>
+            <a href="/contact" class={`nav-link ${isActive('/contact') ? 'active' : ''}`}>Contact</a>
+          </li>
+        </ul>
+      </nav>
+      <ThemeToggle />
+    </div>
+  </div>
+</header>

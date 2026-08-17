@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="About | Chaitanya's blog" description="About Chaitanya, bio, research interests, and writings." fullBleed={true}>
+  <div class="about-split">
+    <!-- Left Half: Full Portrait / Picture -->
+    <div class="about-split-left">
+      <img
+        src="/images/chai-trek-wide.JPG"
+        alt="Chaitanya"
+        loading="eager"
+      />
+    </div>
+
+    <!-- Right Half: Bio Text -->
+    <div class="about-split-right">
+      <h2>Chaitanya Sanivada</h2>
+      <!--
+      <div class="subtitle">Writer, builder, and researcher.</div>
+      -->
+
+      <p>
+        Hi! Welcome to my blog. I like learning new things, I'm currently interested in using software & AI to solve problems around me.
+      </p>
+
+      <p>
+        I document my technical notes, opinions, and personal experiences here.
+      </p>
+
+      <p>
+        <b><a href="https://x.com/snvdch" target="_blank">Twitter</a></b>
+      </p>
+    </div>
+  </div>
+</BaseLayout>
