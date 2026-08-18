@@ -13,7 +13,7 @@ const isActive = (path: string) => {
   <div class="navbar-container">
     <a href="/" class="navbar-brand">Chaitanya's blog</a>
     <div class="navbar-right">
-      <nav aria-label="Main Navigation">
+      <nav aria-label="Desktop Navigation" class="desktop-nav">
         <ul class="nav-links">
           <li>
             <a href="/blog" class={`nav-link ${isActive('/blog') || isActive('/posts') || isActive('/personal') || isActive('/notes') ? 'active' : ''}`}>Blog</a>
@@ -30,6 +30,95 @@ const isActive = (path: string) => {
         </ul>
       </nav>
       <ThemeToggle />
+      <button
+        id="mobile-menu-btn"
+        class="mobile-menu-btn"
+        aria-label="Toggle navigation menu"
+        aria-expanded="false"
+        aria-controls="mobile-nav-menu"
+      >
+        <span class="hamburger-icon" aria-hidden="true">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </span>
+      </button>
     </div>
   </div>
+
+  <!-- Chris Olah Style Full-Width Dropdown Accordion Menu -->
+  <nav id="mobile-nav-menu" class="mobile-nav-dropdown" aria-label="Mobile Navigation" aria-hidden="true">
+    <ul class="mobile-nav-list">
+      <li>
+        <a href="/blog" class={`mobile-nav-item ${isActive('/blog') || isActive('/posts') || isActive('/personal') || isActive('/notes') ? 'active' : ''}`}>
+          <span>Blog</span>
+        </a>
+      </li>
+      <li>
+        <a href="/about" class={`mobile-nav-item ${isActive('/about') ? 'active' : ''}`}>
+          <span>About</span>
+        </a>
+      </li>
+      <li>
+        <a href="/gallery" class={`mobile-nav-item ${isActive('/gallery') ? 'active' : ''}`}>
+          <span>Gallery</span>
+        </a>
+      </li>
+      <li>
+        <a href="/contact" class={`mobile-nav-item ${isActive('/contact') ? 'active' : ''}`}>
+          <span>Contact</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
 </header>
+
+<script is:inline>
+  (function () {
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const dropdown = document.getElementById('mobile-nav-menu');
+    const navLinks = dropdown ? dropdown.querySelectorAll('.mobile-nav-item') : [];
+
+    function toggleMenu() {
+      if (!dropdown || !menuBtn) return;
+      const isOpen = dropdown.classList.contains('is-open');
+      if (isOpen) {
+        dropdown.classList.remove('is-open');
+        menuBtn.setAttribute('aria-expanded', 'false');
+        dropdown.setAttribute('aria-hidden', 'true');
+      } else {
+        dropdown.classList.add('is-open');
+        menuBtn.setAttribute('aria-expanded', 'true');
+        dropdown.setAttribute('aria-hidden', 'false');
+      }
+    }
+
+    function closeMenu() {
+      if (!dropdown || !menuBtn) return;
+      dropdown.classList.remove('is-open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      dropdown.setAttribute('aria-hidden', 'true');
+    }
+
+    if (menuBtn) {
+      menuBtn.addEventListener('click', toggleMenu);
+    }
+
+    navLinks.forEach((link) => {
+      link.addEventListener('click', closeMenu);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && dropdown && dropdown.classList.contains('is-open')) {
+        closeMenu();
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      const header = document.querySelector('.site-navbar');
+      if (header && !header.contains(e.target) && dropdown && dropdown.classList.contains('is-open')) {
+        closeMenu();
+      }
+    });
+  })();
+</script>
