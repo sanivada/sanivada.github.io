@@ -2,7 +2,7 @@
 title: "Participating in a 30 day writing challenge"
 description: "and on comparing myself to others"
 pubDate: 2026-08-19
-tags: ["30-day-micro-blogging-challenge-zoe]
+tags: ["30-day-micro-blogging-challenge-zoe"]
 draft: false
 ---
 I have setup this blog a few days back because I wanted to write online. Many people whom I look up to have repeatedly advised to start writing.
