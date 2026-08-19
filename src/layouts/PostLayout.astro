@@ -18,13 +18,14 @@ const formattedDate = new Intl.DateTimeFormat('en-US', {
   day: 'numeric',
 }).format(pubDate);
 
-const typeLabel = type === 'posts' ? '/posts' : type === 'personal' ? '/personal' : '/notes';
+const typeLabel = `/${type}`;
 ---
 
 <BaseLayout title={`${title} -- Chaitanya's blog`} description={description}>
   <article>
     <div class="article-info-header">
       <h1>{title}</h1>
+      {description && <p class="article-subtitle">{description}</p>}
       <div class="article-date-meta">
         <span>Posted on {formattedDate}</span>
         <span>· in <a href={`/blog?tab=${type}`}>{typeLabel}</a></span>
@@ -32,7 +33,7 @@ const typeLabel = type === 'posts' ? '/posts' : type === 'personal' ? '/personal
           <>
             <span>·</span>
             {tags.map((tag) => (
-              <a href={`/blog?q=${encodeURIComponent(tag)}`} class="tag-chip">{tag}</a>
+              <a href={`/blog?tag=${encodeURIComponent(tag)}`} class="tag-chip">{tag}</a>
             ))}
           </>
         )}

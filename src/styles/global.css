@@ -37,8 +37,8 @@
 
 :root {
   /* Light Theme */
-  --bg: #ffffff;
-  --bg-subtle: #f6f8fa;
+  --bg: #dcf5d6;
+  --bg-subtle: #cdeec6;
   --text: #222222;
   --text-muted: #555555;
   --text-dim: #777777;
@@ -48,10 +48,10 @@
   --nav-text-hover: #ffffff;
   --link-color: #2b6cb0;
   --link-hover: #1a0dab;
-  --border: #e2e8f0;
-  --border-subtle: #eaecef;
-  --code-bg: #f5f5f5;
-  --quote-bg: rgb(245, 245, 245);
+  --border: #bce0b4;
+  --border-subtle: #cbecc3;
+  --code-bg: #cdeec6;
+  --quote-bg: #cdeec6;
   --max-width: 800px;
 
   /* Chris Olah exact font definitions */
@@ -540,13 +540,23 @@ body.home-bg {
    ========================================================================== */
 
 .search-wrapper {
-  margin: 1.25rem 0;
-  max-width: 500px;
+  margin: 1.25rem 0 1.5rem 0;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.search-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
 
 .search-input {
   width: 100%;
-  padding: 0.5rem 0.75rem;
+  padding: 0.5rem 2.25rem 0.5rem 0.75rem;
   font-family: var(--font-cms);
   font-size: 0.95rem;
   background-color: var(--bg);
@@ -554,10 +564,86 @@ body.home-bg {
   border: 1px solid var(--border);
   border-radius: 3px;
   outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.search-input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .search-input:focus {
   border-color: var(--text);
+}
+
+.search-clear-btn {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.15rem 0.35rem;
+  border-radius: 3px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.search-clear-btn:hover {
+  color: var(--text);
+  background-color: var(--bg-subtle);
+}
+
+.active-filter-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: 3px;
+  padding: 0.35rem 0.75rem;
+}
+
+.active-filter-label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.active-filter-text {
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.clear-tag-chip-btn {
+  background: none;
+  border: none;
+  color: var(--link-color);
+  font-family: var(--font-cms);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.15s ease;
+}
+
+.clear-tag-chip-btn:hover {
+  color: var(--link-hover);
 }
 
 .filter-bar {
@@ -565,6 +651,7 @@ body.home-bg {
   gap: 1.25rem;
   margin-bottom: 1.75rem;
   font-size: 0.95rem;
+  flex-wrap: wrap;
 }
 
 .filter-btn {
@@ -588,6 +675,34 @@ body.home-bg {
   color: var(--text);
   font-weight: 700;
   text-decoration-color: var(--text);
+}
+
+.empty-state {
+  padding: 2rem 0;
+  color: var(--text-dim);
+  text-align: left;
+}
+
+.empty-state p {
+  font-style: italic;
+  margin-bottom: 0.75rem;
+}
+
+.reset-filter-btn {
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--font-cms);
+  font-size: 0.85rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.reset-filter-btn:hover {
+  background-color: var(--border-subtle);
+  border-color: var(--text-dim);
 }
 
 /* ==========================================================================
@@ -836,6 +951,15 @@ body.home-bg {
   text-align: left;
 }
 
+.article-subtitle {
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 0.1rem;
+  margin-bottom: 0.65rem;
+  line-height: 1.5;
+}
+
 .article-date-meta {
   color: var(--text-dim);
   font-style: italic;
@@ -1023,6 +1147,11 @@ button, a, input, select {
   .article-info-header {
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
+  }
+
+  .article-subtitle {
+    font-size: 1.05rem;
+    margin-bottom: 0.5rem;
   }
 }
 

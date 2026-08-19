@@ -3,13 +3,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import WritingCard from '../components/WritingCard.astro';
 import { getCollection } from 'astro:content';
 
-const posts = (await getCollection('posts', ({ data }) => !data.draft)).map(p => ({ ...p, collectionType: 'posts' as const }));
-const personal = (await getCollection('personal', ({ data }) => !data.draft)).map(p => ({ ...p, collectionType: 'personal' as const }));
-const notes = (await getCollection('notes', ({ data }) => !data.draft)).map(n => ({ ...n, collectionType: 'notes' as const }));
+const [posts, personal, notes] = await Promise.all([
+  getCollection('posts', ({ data }) => !data.draft),
+  getCollection('personal', ({ data }) => !data.draft),
+  getCollection('notes', ({ data }) => !data.draft),
+]);
 
-const allWritings = [...posts, ...personal, ...notes].sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
+const allWritings = [
+  ...posts.map(p => ({ ...p, collectionType: 'posts' as const })),
+  ...personal.map(p => ({ ...p, collectionType: 'personal' as const })),
+  ...notes.map(n => ({ ...n, collectionType: 'notes' as const })),
+].sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
 <BaseLayout title="Blog | Chaitanya's blog" description="All writings, notes, and essays.">
@@ -19,127 +23,232 @@ const allWritings = [...posts, ...personal, ...notes].sort(
 
   <!-- Search Input -->
   <div class="search-wrapper">
-    <input
-      type="search"
-      id="search-box"
-      class="search-input"
-      placeholder="Search writings by title or tag..."
-      aria-label="Search writings"
-      autocomplete="off"
-    />
+    <div class="search-input-container">
+      <input
+        type="search"
+        id="search-box"
+        class="search-input"
+        placeholder="Search writings by title or description..."
+        aria-label="Search writings"
+        autocomplete="off"
+      />
+      <button
+        type="button"
+        id="search-clear-btn"
+        class="search-clear-btn"
+        aria-label="Clear search"
+        style="display: none;"
+      >
+        &times;
+      </button>
+    </div>
+    <div id="active-filter-indicator" class="active-filter-indicator" style="display: none;">
+      <span class="active-filter-label">
+        Filtered by tag: <strong id="active-filter-text" class="active-filter-text"></strong>
+      </span>
+      <button type="button" id="clear-tag-btn" class="clear-tag-chip-btn">Clear filter &times;</button>
+    </div>
   </div>
 
   <!-- Category Filter Links -->
   <div class="filter-bar" role="tablist" aria-label="Category filters">
-    <button class="filter-btn active" data-tab="all">All ({allWritings.length})</button>
-    <button class="filter-btn" data-tab="posts">Posts ({posts.length})</button>
-    <button class="filter-btn" data-tab="personal">Personal ({personal.length})</button>
-    <button class="filter-btn" data-tab="notes">Notes ({notes.length})</button>
+    <button class="filter-btn active" data-tab="all">
+      All <span class="tab-count" data-tab="all">({allWritings.length})</span>
+    </button>
+    <button class="filter-btn" data-tab="posts">
+      Posts <span class="tab-count" data-tab="posts">({posts.length})</span>
+    </button>
+    <button class="filter-btn" data-tab="personal">
+      Personal <span class="tab-count" data-tab="personal">({personal.length})</span>
+    </button>
+    <button class="filter-btn" data-tab="notes">
+      Notes <span class="tab-count" data-tab="notes">({notes.length})</span>
+    </button>
   </div>
 
   <!-- Post List -->
   <ul class="post-list" id="writings-list">
     {allWritings.map((item) => (
-      <div
-        class="writing-item-wrapper"
-        data-category={item.collectionType}
-        data-title={item.data.title.toLowerCase()}
-        data-desc={item.data.description.toLowerCase()}
-        data-tags={item.data.tags.join(' ').toLowerCase()}
-      >
-        <WritingCard
-          title={item.data.title}
-          description={item.data.description}
-          pubDate={item.data.pubDate}
-          url={`/${item.collectionType}/${item.id}`}
-          type={item.collectionType}
-          tags={item.data.tags}
-        />
-      </div>
+      <WritingCard
+        title={item.data.title}
+        description={item.data.description}
+        pubDate={item.data.pubDate}
+        url={`/${item.collectionType}/${item.id}`}
+        type={item.collectionType}
+        tags={item.data.tags}
+      />
     ))}
   </ul>
 
   <!-- Empty State -->
-  <div id="empty-state" style="display: none; padding: 2rem 0; color: var(--text-dim); font-style: italic;">
-    <p>No writings match your query.</p>
+  <div id="empty-state" class="empty-state" style="display: none;">
+    <p>No writings match your criteria.</p>
+    <button type="button" id="empty-clear-btn" class="reset-filter-btn">Clear filters</button>
   </div>
 
   <script is:inline>
     (function () {
       const searchBox = document.getElementById('search-box');
-      const tabs = document.querySelectorAll('.filter-btn');
-      const items = document.querySelectorAll('.writing-item-wrapper');
+      const searchClear = document.getElementById('search-clear-btn');
+      const tagIndicator = document.getElementById('active-filter-indicator');
+      const tagIndicatorText = document.getElementById('active-filter-text');
       const emptyState = document.getElementById('empty-state');
+      const tabs = document.querySelectorAll('.filter-btn');
+      const tabCounts = document.querySelectorAll('.tab-count');
+      const items = document.querySelectorAll('#writings-list > .post-row');
 
-      let currentTab = 'all';
-      let searchQuery = '';
+      let state = { tab: 'all', tag: '', q: '' };
 
-      function filterItems() {
+      function syncUrl(push = true) {
+        const params = new URLSearchParams();
+        if (state.tab !== 'all') params.set('tab', state.tab);
+        if (state.tag) params.set('tag', state.tag);
+        if (state.q) params.set('q', state.q);
+
+        const qs = params.toString();
+        const url = qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
+        if (push) history.pushState(null, '', url);
+        else history.replaceState(null, '', url);
+      }
+
+      function render(syncInput = true) {
+        const q = state.q.toLowerCase().trim();
+        const tag = state.tag.toLowerCase().trim();
+        const counts = { all: 0, posts: 0, personal: 0, notes: 0 };
         let visibleCount = 0;
-        const query = searchQuery.trim().toLowerCase();
 
         items.forEach((item) => {
-          const category = item.getAttribute('data-category');
-          const title = item.getAttribute('data-title') || '';
-          const desc = item.getAttribute('data-desc') || '';
-          const tags = item.getAttribute('data-tags') || '';
+          const category = item.dataset.category || '';
+          const title = item.dataset.title || '';
+          const desc = item.dataset.desc || '';
+          const tags = (item.dataset.tags || '').split('|||').filter(Boolean);
 
-          const matchesCategory = currentTab === 'all' || category === currentTab;
+          const matchesTag = !tag || tags.includes(tag);
           const matchesSearch =
-            !query ||
-            title.includes(query) ||
-            desc.includes(query) ||
-            tags.includes(query);
+            !q ||
+            title.includes(q) ||
+            desc.includes(q) ||
+            tags.some((t) => t.includes(q));
 
-          if (matchesCategory && matchesSearch) {
-            item.style.display = 'block';
-            visibleCount++;
-          } else {
-            item.style.display = 'none';
+          const matchesFilters = matchesTag && matchesSearch;
+
+          if (matchesFilters) {
+            counts.all++;
+            if (counts[category] !== undefined) counts[category]++;
+          }
+
+          const matchesTab = state.tab === 'all' || category === state.tab;
+          const isVisible = matchesTab && matchesFilters;
+
+          item.style.display = isVisible ? 'flex' : 'none';
+          if (isVisible) visibleCount++;
+        });
+
+        // Update tabs and counts
+        tabs.forEach((tab) => {
+          tab.classList.toggle('active', tab.dataset.tab === state.tab);
+        });
+        tabCounts.forEach((countEl) => {
+          const key = countEl.dataset.tab;
+          if (counts[key] !== undefined) {
+            countEl.textContent = `(${counts[key]})`;
           }
         });
 
+        // Update active tag banner
+        if (tagIndicator) {
+          tagIndicator.style.display = state.tag ? 'flex' : 'none';
+          if (tagIndicatorText) tagIndicatorText.textContent = state.tag;
+        }
+
+        // Update search box clear button and value
+        if (syncInput && searchBox && searchBox.value !== state.q) {
+          searchBox.value = state.q;
+        }
+        if (searchClear) {
+          searchClear.style.display = state.q ? 'inline-flex' : 'none';
+        }
+
+        // Update empty state
         if (emptyState) {
           emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
         }
       }
 
-      const urlParams = new URLSearchParams(window.location.search);
-      const initialTab = urlParams.get('tab');
-      const initialQuery = urlParams.get('q');
+      function setState(patch, push = true) {
+        Object.assign(state, patch);
+        syncUrl(push);
+        render(true);
+      }
 
-      if (initialTab && ['all', 'posts', 'personal', 'notes'].includes(initialTab)) {
-        currentTab = initialTab;
-        tabs.forEach((tab) => {
-          if (tab.getAttribute('data-tab') === currentTab) {
-            tab.classList.add('active');
-          } else {
-            tab.classList.remove('active');
+      function parseUrlState() {
+        const params = new URLSearchParams(window.location.search);
+        const tab = params.get('tab');
+        return {
+          tab: ['all', 'posts', 'personal', 'notes'].includes(tab) ? tab : 'all',
+          tag: params.get('tag') || '',
+          q: params.get('q') || '',
+        };
+      }
+
+      // Initialize
+      state = parseUrlState();
+      render(true);
+
+      // Search input handlers
+      if (searchBox) {
+        searchBox.addEventListener('input', (e) => {
+          state.q = e.target.value;
+          syncUrl(false);
+          render(false);
+        });
+
+        searchBox.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            setState({ q: '' });
           }
         });
       }
 
-      if (initialQuery && searchBox) {
-        searchBox.value = initialQuery;
-        searchQuery = initialQuery;
-      }
-
-      filterItems();
-
-      if (searchBox) {
-        searchBox.addEventListener('input', (e) => {
-          searchQuery = e.target.value;
-          filterItems();
+      if (searchClear) {
+        searchClear.addEventListener('click', () => {
+          setState({ q: '' });
+          searchBox?.focus();
         });
       }
 
+      // Filter clear handlers
+      document.getElementById('clear-tag-btn')?.addEventListener('click', () => {
+        setState({ tag: '' });
+      });
+
+      document.getElementById('empty-clear-btn')?.addEventListener('click', () => {
+        setState({ tag: '', q: '' });
+      });
+
+      // Category tab click handlers
       tabs.forEach((tab) => {
         tab.addEventListener('click', () => {
-          tabs.forEach((t) => t.classList.remove('active'));
-          tab.classList.add('active');
-          currentTab = tab.getAttribute('data-tab') || 'all';
-          filterItems();
+          setState({ tab: tab.dataset.tab || 'all' });
         });
+      });
+
+      // Smooth tag chip navigation on the blog page
+      document.addEventListener('click', (e) => {
+        const tagLink = e.target.closest('a.tag-chip');
+        if (tagLink && window.location.pathname.startsWith('/blog')) {
+          e.preventDefault();
+          const url = new URL(tagLink.href, window.location.origin);
+          const tag = url.searchParams.get('tag') || url.searchParams.get('q') || tagLink.textContent.trim();
+          setState({ tag });
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+
+      // Browser back/forward navigation
+      window.addEventListener('popstate', () => {
+        state = parseUrlState();
+        render(true);
       });
     })();
   </script>
