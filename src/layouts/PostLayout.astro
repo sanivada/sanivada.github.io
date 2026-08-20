@@ -10,7 +10,7 @@ interface Props {
   type: 'posts' | 'personal' | 'notes';
 }
 
-const { title, description, pubDate, tags = [], type } = Astro.props;
+const { title, description, pubDate, updatedDate, tags = [], type } = Astro.props;
 
 const formattedDate = new Intl.DateTimeFormat('en-US', {
   year: 'numeric',
@@ -21,7 +21,14 @@ const formattedDate = new Intl.DateTimeFormat('en-US', {
 const typeLabel = `/${type}`;
 ---
 
-<BaseLayout title={`${title} -- Chaitanya's blog`} description={description}>
+<BaseLayout
+  title={`${title} -- Chaitanya's blog`}
+  description={description}
+  ogType="article"
+  pubDate={pubDate}
+  updatedDate={updatedDate}
+  tags={tags}
+>
   <article>
     <div class="article-info-header">
       <h1>{title}</h1>
