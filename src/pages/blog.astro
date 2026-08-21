@@ -51,6 +51,9 @@ const allWritings = [
     <button class="filter-btn active" data-tab="all">
       All <span class="tab-count" data-tab="all">({allWritings.length})</span>
     </button>
+    <button class="filter-btn" data-tab="technical">
+      Technical <span class="tab-count" data-tab="technical">({posts.length + notes.length})</span>
+    </button>
     <button class="filter-btn" data-tab="posts">
       Posts <span class="tab-count" data-tab="posts">({posts.length})</span>
     </button>
@@ -110,7 +113,7 @@ const allWritings = [
       function render(syncInput = true) {
         const q = state.q.toLowerCase().trim();
         const tag = state.tag.toLowerCase().trim();
-        const counts = { all: 0, posts: 0, personal: 0, notes: 0 };
+        const counts = { all: 0, technical: 0, posts: 0, personal: 0, notes: 0 };
         let visibleCount = 0;
 
         items.forEach((item) => {
@@ -133,12 +136,18 @@ const allWritings = [
             if (counts[category] !== undefined) counts[category]++;
           }
 
-          const matchesTab = state.tab === 'all' || category === state.tab;
+          const matchesTab =
+            state.tab === 'all' ||
+            (state.tab === 'technical'
+              ? category === 'posts' || category === 'notes'
+              : category === state.tab);
           const isVisible = matchesTab && matchesFilters;
 
           item.style.display = isVisible ? 'flex' : 'none';
           if (isVisible) visibleCount++;
         });
+
+        counts.technical = counts.posts + counts.notes;
 
         // Update tabs and counts
         tabs.forEach((tab) => {
@@ -181,7 +190,7 @@ const allWritings = [
         const params = new URLSearchParams(window.location.search);
         const tab = params.get('tab');
         return {
-          tab: ['all', 'posts', 'personal', 'notes'].includes(tab) ? tab : 'all',
+          tab: ['all', 'technical', 'posts', 'personal', 'notes'].includes(tab) ? tab : 'all',
           tag: params.get('tag') || '',
           q: params.get('q') || '',
         };

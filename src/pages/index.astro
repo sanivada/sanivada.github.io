@@ -7,16 +7,18 @@ const posts = (await getCollection('posts', ({ data }) => !data.draft)).map(p =>
 const personal = (await getCollection('personal', ({ data }) => !data.draft)).map(p => ({ ...p, collectionType: 'personal' as const }));
 const notes = (await getCollection('notes', ({ data }) => !data.draft)).map(n => ({ ...n, collectionType: 'notes' as const }));
 
-const allWritings = [...posts, ...personal, ...notes].sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
+const byDateDesc = (a: { data: { pubDate: Date } }, b: { data: { pubDate: Date } }) =>
+  b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
+
+const technical = [...posts, ...notes].sort(byDateDesc).slice(0, 5);
+const personalRecent = [...personal].sort(byDateDesc).slice(0, 5);
 ---
 
 <BaseLayout title="Chaitanya's blog" description="Personal website, learning notes, and writings." isHome={true}>
   <section>
-    <h2>Recent Writings</h2>
+    <h2>Technical</h2>
     <ul class="post-list">
-      {allWritings.map((item) => (
+      {technical.map((item) => (
         <WritingCard
           title={item.data.title}
           description={item.data.description}
@@ -26,9 +28,34 @@ const allWritings = [...posts, ...personal, ...notes].sort(
           tags={item.data.tags}
         />
       ))}
-      {allWritings.length === 0 && (
-        <li style="color: var(--text-dim); font-style: italic;">No writings published yet.</li>
+      {technical.length === 0 && (
+        <li style="color: var(--text-dim); font-style: italic;">No technical writings published yet.</li>
       )}
     </ul>
+    {technical.length > 0 && (
+      <a href="/blog?tab=technical" class="view-all-link">View all &rarr;</a>
+    )}
+  </section>
+
+  <section>
+    <h2>Personal</h2>
+    <ul class="post-list">
+      {personalRecent.map((item) => (
+        <WritingCard
+          title={item.data.title}
+          description={item.data.description}
+          pubDate={item.data.pubDate}
+          url={`/${item.collectionType}/${item.id}`}
+          type={item.collectionType}
+          tags={item.data.tags}
+        />
+      ))}
+      {personalRecent.length === 0 && (
+        <li style="color: var(--text-dim); font-style: italic;">No personal writings published yet.</li>
+      )}
+    </ul>
+    {personalRecent.length > 0 && (
+      <a href="/blog?tab=personal" class="view-all-link">View all &rarr;</a>
+    )}
   </section>
 </BaseLayout>

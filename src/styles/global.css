@@ -457,6 +457,19 @@ body.home-bg {
   text-align: left;
 }
 
+.view-all-link {
+  display: inline-block;
+  margin-top: 1.25rem;
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.view-all-link:hover {
+  color: var(--link-hover);
+  text-decoration: underline;
+}
+
 .post-row {
   display: flex;
   flex-direction: column;
