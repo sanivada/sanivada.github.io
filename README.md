@@ -12,7 +12,7 @@ This website combines design choices inspired by influential technical blogs:
 
 - **Chris Olah ([colah.github.io](https://colah.github.io/))**:
   - **Typography**: Exact Computer Modern (`CMS`) serif font stack (`cmunrm`, `cmunbx`, `cmunti`, `cmunbi`) for headings and body prose.
-  - **Homepage**: 80vw full-height content container resting on a fixed cover background image (`/images/beach.jpg`).
+  - **Homepage**: 80vw full-height content container resting on a fixed cover background image (`src/assets/beach.webp`).
   - **About Page**: Clean, full-viewport 55:45 split layout (photo on the left, bio on the right) with no vertical overflow.
   - **Prose**: Left-aligned, essay-grade reading experience with clean math/code support.
 - **Lilian Weng ([lilianweng.github.io](https://lilianweng.github.io/))**:
@@ -37,11 +37,12 @@ This website combines design choices inspired by influential technical blogs:
 │   │   ├── cmunbx.woff         # Bold
 │   │   ├── cmunti.woff         # Italic
 │   │   └── cmunbi.woff         # Bold Italic
-│   └── images/
-│       ├── beach.jpg           # Home page background cover
-│       ├── chai-trek-wide.JPG  # About page portrait photo
-│       └── gallery/            # Photography gallery images (dynamically discovered)
+│   └── images/                  # (moved) site images now live in src/assets/
 ├── src/
+│   ├── assets/                  # Optimized at build time by astro:assets
+│   │   ├── beach.webp           # Home page background cover (1920w WebP)
+│   │   ├── chai-trek-wide.JPG   # About page portrait photo
+│   │   └── gallery/             # Photography gallery images (auto-discovered & optimized)
 │   ├── components/
 │   │   ├── Header.astro        # Top navbar with navigation links and ThemeToggle
 │   │   ├── Footer.astro        # Minimal site footer
@@ -98,8 +99,9 @@ Your markdown content here...
 
 ### 2. Adding Photos to the Gallery
 - **Do not edit JSON or code to add photos.**
-- Simply place any image (`.jpg`, `.jpeg`, `.png`, `.webp`) into `public/images/gallery/`.
-- `src/pages/gallery.astro` uses dynamic filesystem discovery to automatically include all images placed in this folder.
+- Simply place any image (`.jpg`, `.jpeg`, `.png`, `.webp`) into `src/assets/gallery/`.
+- `src/pages/gallery.astro` discovers all images in this folder automatically, and **Astro optimizes them at build time** (resized to max 1600px wide, converted to WebP) — no manual resizing needed.
+- The same applies to other site images: reference them via `astro:assets` (`<Image>` / `getImage`) from `src/assets/` and they are optimized automatically.
 
 ### 3. Styling & CSS Rules
 - Keep styling vanilla; all styles are centralized in `src/styles/global.css`.

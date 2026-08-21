@@ -1,14 +1,17 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import portrait from '../assets/chai-trek-wide.jpg';
 ---
 
 <BaseLayout title="About | Chaitanya's blog" description="About Chaitanya, bio, research interests, and writings." fullBleed={true}>
   <div class="about-split">
     <!-- Left Half: Full Portrait / Picture -->
     <div class="about-split-left">
-      <img
-        src="/images/chai-trek-wide.JPG"
+      <Image
+        src={portrait}
         alt="Chaitanya"
+        width={1200}
         loading="eager"
       />
     </div>
@@ -29,7 +32,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </p>
 
       <p>
-        <b><a href="https://x.com/snvdch" target="_blank">Twitter</a></b>
+        <b><a href="https://x.com/snvdch" target="_blank" rel="noopener noreferrer">Twitter</a></b>
       </p>
     </div>
   </div>
