@@ -957,6 +957,22 @@ body.home-bg {
   height: auto;
 }
 
+.prose figure {
+  margin: 1.5rem auto;
+}
+
+.prose figure img {
+  display: block;
+  margin: 0 auto;
+}
+
+.prose figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-dim);
+  text-align: center;
+}
+
 .article-info-header {
   margin-bottom: 2rem;
   padding-bottom: 1.25rem;
